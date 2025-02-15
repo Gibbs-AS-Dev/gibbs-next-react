@@ -6,7 +6,7 @@ on:
 jobs:
  sync:
     name: Build and sync to server
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v4
@@ -16,7 +16,7 @@ jobs:
         env:
           REMOTE_HOST: ${{ secrets.HOST }}
           REMOTE_USER: ${{ secrets.USERNAME }}
-          SSH_PRIVATE_KEY: $${{ secrets.KEY_SYNC }}
+          SSH_PRIVATE_KEY: $${{ secrets.KEY }}
           ARGS: "-rlgoDzvc"
           EXCLUDE: ".git, .vscode, node_modules"
           TARGET: /var/www/vhosts/dev.gibbs.no/nextjs.dev.gibbs.no
