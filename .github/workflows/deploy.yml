@@ -1,0 +1,20 @@
+name: Deploy nextjs gibbs
+on:
+  push:
+    branches: [main]
+
+jobs:
+ sync:
+    name: Build and sync to server
+    runs-on: ubuntu-latest 
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Executing remote ssh commands using password
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          script: whoami
