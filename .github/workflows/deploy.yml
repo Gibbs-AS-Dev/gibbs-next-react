@@ -1,0 +1,38 @@
+name: Deploy nextjs gibbs
+on:
+  push:
+    branches: [main]
+
+jobs:
+ sync:
+    name: Build and sync to server
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to Server
+        uses: burnett01/rsync-deployments@7.0.2
+        with:
+          switches: -avzr --delete
+          path: ./
+          remote_path: /var/www/vhosts/dev.gibbs.no/nextjs.dev.gibbs.no
+          remote_host: ${{ secrets.HOST }}
+          remote_user: ${{ secrets.USERNAME }}
+          remote_key: ${{ secrets.KEY }}
+
+      - name: Executing remote ssh commands using password
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          script: |
+            echo "Building docker image code 🔨"
+            cd /var/www/vhosts/dev.gibbs.no/nextjs.dev.gibbs.no
+            docker compose build 
+            echo "Starting services 🆙"
+            docker compose up -d
+            echo "Code complete 🔨"
+            docker compose ps -a
+            echo "Complete ✅"
