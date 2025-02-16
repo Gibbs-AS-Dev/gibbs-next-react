@@ -14,7 +14,7 @@ jobs:
       - name: Deploy to Server
         uses: burnett01/rsync-deployments@7.0.2
         with:
-          switches: -avzr --delete
+          switches: -avzr --delete  --exclude=".next, .git"
           path: ./
           remote_path: /var/www/vhosts/dev.gibbs.no/nextjs.dev.gibbs.no
           remote_host: ${{ secrets.HOST }}
