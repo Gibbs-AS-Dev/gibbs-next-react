@@ -39,7 +39,7 @@ export default function Page(): React.JSX.Element {
 			<Stack spacing={4}>
 				<Stack direction={{ xs: "column", sm: "row" }} spacing={3} sx={{ alignItems: "flex-start" }}>
 					<Box sx={{ flex: "1 1 auto" }}>
-						<Typography variant="h4">Overview</Typography>
+						<Typography variant="h4">Overview 2</Typography>
 					</Box>
 					<div>
 						<Button startIcon={<PlusIcon />} variant="contained">
@@ -54,7 +54,7 @@ export default function Page(): React.JSX.Element {
 							xs: 12,
 						}}
 					>
-						<Summary amount={31} diff={15} icon={ListChecksIcon} title="Cars" trend="up" />
+						<Summary amount={31} diff={15} icon={ListChecksIcon} title="Cars 2" trend="up" />
 					</Grid>
 					<Grid
 						size={{
@@ -62,7 +62,7 @@ export default function Page(): React.JSX.Element {
 							xs: 12,
 						}}
 					>
-						<Summary amount={240} diff={5} icon={UsersIcon} title="Pizza ordered" trend="down" />
+						<Summary amount={240} diff={5} icon={UsersIcon} title="Pizza ordered 2" trend="down" />
 					</Grid>
 					<Grid
 						size={{
