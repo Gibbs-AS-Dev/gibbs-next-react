@@ -13,27 +13,25 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Deploy Code to Server (Rsync)
-        uses: burnett01/rsync-deployments@7.0.2
-        with:
-          switches: -avzh --exclude=".next" --exclude=".git" --exclude="node_modules"
-          path: ./
-          remote_path: /var/www/vhosts/dev.gibbs.no/nextjs.dev.gibbs.no
-          remote_host: ${{ secrets.HOST }}
-          remote_user: ${{ secrets.DEV_USERNAME }}
-          remote_password: ${{ secrets.DEV_PASSWORD }}  # Use password authentication
+      # Install sshpass for password-based SSH authentication
+      - name: Install sshpass
+        run: sudo apt-get install -y sshpass
 
-      - name: Execute Remote SSH Commands (With Password)
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.DEV_USERNAME }}
-          password: ${{ secrets.DEV_PASSWORD }}  # Use password authentication
-          script: |
+      # Deploy files to the remote server using rsync with password authentication
+      - name: Deploy Next.js files to server using rsync
+        run: |
+          echo "🚀 Deploying files to server..."
+          sshpass -p "${{ secrets.DEV_PASSWORD }}" rsync -avzh --exclude=".git" --exclude="node_modules" -e "ssh -o StrictHostKeyChecking=no" ./ ${{ secrets.DEV_USERNAME }}@${{ secrets.HOST }}:/var/www/vhosts/dev.gibbs.no/nextjs.dev.gibbs.no
+
+      # Execute remote commands via SSH using sshpass (with password)
+      - name: Restart Docker Containers for Zero Downtime
+        run: |
+          echo "🚀 Connecting via SSH to deploy..."
+          sshpass -p "${{ secrets.DEV_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.DEV_USERNAME }}@${{ secrets.HOST }} << 'EOF'
             echo "🚀 Deploying Next.js app with Docker Compose..."
             
             cd /var/www/vhosts/dev.gibbs.no/nextjs.dev.gibbs.no
-            echo "🛠 Pulling latest changes..."
+            echo "🔄 Pulling latest changes..."
             git pull origin main || echo "⚠️ Git pull failed, skipping..."
             
             echo "🔄 Starting new container before stopping old one..."
@@ -49,3 +47,4 @@ jobs:
             
             echo "✅ Deployment complete!"
             docker compose ps
+          EOF
