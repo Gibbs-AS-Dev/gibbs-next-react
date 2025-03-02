@@ -18,7 +18,6 @@ RUN npm run build
 # Stage 2: Create a lightweight production image
 FROM node:20-alpine
 
-
 WORKDIR /gibbs-react
 
 # Copy only the necessary files from the builder stage
