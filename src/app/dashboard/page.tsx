@@ -54,7 +54,7 @@ export default function Page(): React.JSX.Element {
 							xs: 12,
 						}}
 					>
-						<Summary amount={31} diff={15} icon={ListChecksIcon} title="Cars" trend="up" />
+						<Summary amount={31} diff={15} icon={ListChecksIcon} title="Carss" trend="up" />
 					</Grid>
 					<Grid
 						size={{
