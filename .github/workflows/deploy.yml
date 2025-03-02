@@ -36,15 +36,9 @@ jobs:
             
             echo "🔄 Starting new container before stopping old one..."
 
+            docker ps -q --filter "name=nextjs-prod" | grep -q . && docker stop nextjs-prod && docker rm nextjs-prod || echo "No old container found"
+
             docker-compose up --build -d nextjs-prod
-            
-            echo "🚀 Ensuring zero downtime..."
-            OLD_CONTAINER=$(docker ps -q --filter "name=nextjs_app_old")
-            if [ ! -z "$OLD_CONTAINER" ]; then
-              echo "🧹 Stopping old container..."
-              docker stop $OLD_CONTAINER
-              docker rm $OLD_CONTAINER
-            fi
             
             echo "✅ Deployment complete!"
             docker compose ps
