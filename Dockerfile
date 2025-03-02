@@ -22,11 +22,9 @@ WORKDIR /gibbs-react
 
 # Copy only necessary files from the builder stage
 COPY --from=builder /gibbs-react/package.json /gibbs-react/package-lock.json ./
-COPY --from=builder /gibbs-react/.next ./.next  # ✅ Ensure this gets copied!
+COPY --from=builder /gibbs-react/.next ./.next  
 COPY --from=builder /gibbs-react/public ./public
 COPY --from=builder /gibbs-react/node_modules ./node_modules
-
-RUN npm install
 
 RUN npm run build
 
