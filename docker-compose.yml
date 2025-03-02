@@ -15,14 +15,13 @@ services:
     command: ["npm", "run", "dev"]
 
   nextjs-prod:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "4000:4000"
     env_file:
       - .env.local
-    volumes:
-      - .:/gibbs-react
-      - /gibbs-react/node_modules
     restart: always
     command: ["npm", "run", "start"]
 
