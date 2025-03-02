@@ -39,7 +39,7 @@ jobs:
 
 
             echo "🔎 Waiting for the new container to be healthy..."
-            sleep 10  # Adjust this if needed
+            sleep 30  
 
             NEW_CONTAINER_ID=\$(docker ps -q --filter "name=nextjs-prod-new")
             if [ -n "\$NEW_CONTAINER_ID" ]; then
