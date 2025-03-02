@@ -33,16 +33,20 @@ jobs:
             cd /var/www/vhosts/dev.gibbs.no/nextjs.dev.gibbs.no
             echo "🔄 Pulling latest changes..."
             git pull origin main || echo "⚠️ Git pull failed, skipping..."
-  
-          
+
+            echo "🛑 Stopping and Removing Only nextjs-prod Container..."
+            docker ps -q --filter "name=nextjs-prod" | grep -q . && docker stop nextjs-prod && docker rm nextjs-prod || echo "No nextjs-prod container found"
+
+            echo "🧹 Removing only nextjs-prod volume..."
+            docker volume ls -q --filter "name=nextjs-prod" | grep -q . && docker volume rm nextjs-prod || echo "No nextjs-prod volume found"
+
+            docker images -q nextjs-prod | grep -q . && docker rmi -f nextjs-prod || echo "No nextjs-prod image found"
+            
+            docker image prune -f
+            
             docker-compose up --build -d nextjs-prod
 
-            OLD_CONTAINER=$(docker ps -q --filter "name=nextjs-prod")
-            if [ ! -z "$OLD_CONTAINER" ]; then
-              echo "🧹 Stopping old container..."
-              docker stop $OLD_CONTAINER
-              docker rm $OLD_CONTAINER
-            fi
+
             
             echo "✅ Deployment complete!"
             docker compose ps
