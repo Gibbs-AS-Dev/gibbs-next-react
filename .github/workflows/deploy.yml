@@ -33,18 +33,10 @@ jobs:
             cd /var/www/vhosts/dev.gibbs.no/nextjs.dev.gibbs.no
             echo "🔄 Pulling latest changes..."
             git pull origin main || echo "⚠️ Git pull failed, skipping..."
-
-            npm install --omit=dev
-
-            echo "⚙️ Building Next.js production app..."
-            npm run build
             
             echo "🔄 Starting new container before stopping old one..."
 
             docker-compose up --build -d nextjs-prod
-
-            echo "🧹 Cleaning up old Docker images..."
-            docker image prune -f
             
             echo "🚀 Ensuring zero downtime..."
             OLD_CONTAINER=$(docker ps -q --filter "name=nextjs_app_old")
