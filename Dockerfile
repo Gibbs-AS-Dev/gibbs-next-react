@@ -26,7 +26,6 @@ COPY --from=builder /gibbs-react/.next ./.next
 COPY --from=builder /gibbs-react/public ./public
 COPY --from=builder /gibbs-react/node_modules ./node_modules
 
-RUN npm run build
 
 # Expose the necessary port
 EXPOSE 4000
