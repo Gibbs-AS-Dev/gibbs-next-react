@@ -35,24 +35,17 @@ jobs:
             git pull origin main || echo "⚠️ Git pull failed, skipping..."
 
             echo "🚀 Starting new nextjs-prod container..."
-            docker-compose up --build -d nextjs-prod-new
+            docker compose up --build -d nextjs-prod-new
 
 
             echo "🔎 Waiting for the new container to be healthy..."
-            sleep 30  
+            sleep 10  # Adjust if necessary
 
-            NEW_CONTAINER_ID=\$(docker ps -q --filter "name=nextjs-prod-new")
-            if [ -n "\$NEW_CONTAINER_ID" ]; then
+            if docker ps --filter "name=nextjs-prod-new" --filter "status=running" | grep -q nextjs-prod-new; then
               echo "✅ New container is running! Swapping traffic..."
 
-              echo "🛑 Stopping and Removing the old nextjs-prod container..."
-              OLD_CONTAINER_ID=\$(docker ps -q --filter "name=nextjs-prod")
-              if [ -n "\$OLD_CONTAINER_ID" ]; then
-                docker stop \$OLD_CONTAINER_ID
-                docker rm \$OLD_CONTAINER_ID
-              else
-                echo "⚠️ No old nextjs-prod container found."
-              fi
+              echo "🛑 Stopping and Removing old nextjs-prod container..."
+              docker ps -q --filter "name=nextjs-prod" | grep -q . && docker stop nextjs-prod && docker rm nextjs-prod || echo "No old nextjs-prod container found"
 
               echo "🔄 Renaming new container to nextjs-prod..."
               docker rename nextjs-prod-new nextjs-prod
