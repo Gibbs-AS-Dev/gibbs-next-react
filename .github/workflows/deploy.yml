@@ -37,14 +37,22 @@ jobs:
             echo "🚀 Starting new nextjs-prod container..."
             docker-compose up --build -d nextjs-prod-new
 
+
             echo "🔎 Waiting for the new container to be healthy..."
-            sleep 10  # Wait for container to start (Adjust as needed)
-            
-            if docker ps --filter "name=nextjs-prod-new" --filter "status=running" | grep -q nextjs-prod-new; then
+            sleep 10  # Adjust this if needed
+
+            NEW_CONTAINER_ID=\$(docker ps -q --filter "name=nextjs-prod-new")
+            if [ -n "\$NEW_CONTAINER_ID" ]; then
               echo "✅ New container is running! Swapping traffic..."
-              
+
               echo "🛑 Stopping and Removing the old nextjs-prod container..."
-              docker ps -q --filter "name=nextjs-prod" | grep -q . && docker stop nextjs-prod && docker rm nextjs-prod || echo "No old nextjs-prod container found"
+              OLD_CONTAINER_ID=\$(docker ps -q --filter "name=nextjs-prod")
+              if [ -n "\$OLD_CONTAINER_ID" ]; then
+                docker stop \$OLD_CONTAINER_ID
+                docker rm \$OLD_CONTAINER_ID
+              else
+                echo "⚠️ No old nextjs-prod container found."
+              fi
 
               echo "🔄 Renaming new container to nextjs-prod..."
               docker rename nextjs-prod-new nextjs-prod
