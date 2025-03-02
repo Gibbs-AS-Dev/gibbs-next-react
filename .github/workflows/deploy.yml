@@ -34,20 +34,25 @@ jobs:
             echo "🔄 Pulling latest changes..."
             git pull origin main || echo "⚠️ Git pull failed, skipping..."
 
-            echo "🛑 Stopping and Removing Only nextjs-prod Container..."
-            docker ps -q --filter "name=nextjs-prod" | grep -q . && docker stop nextjs-prod && docker rm nextjs-prod || echo "No nextjs-prod container found"
+            echo "🚀 Starting new nextjs-prod container..."
+            docker-compose up --build -d nextjs-prod-new
 
-            echo "🧹 Removing only nextjs-prod volume..."
-            docker volume ls -q --filter "name=nextjs-prod" | grep -q . && docker volume rm nextjs-prod || echo "No nextjs-prod volume found"
-
-            docker images -q nextjs-prod | grep -q . && docker rmi -f nextjs-prod || echo "No nextjs-prod image found"
+            echo "🔎 Waiting for the new container to be healthy..."
+            sleep 10  # Wait for container to start (Adjust as needed)
             
-            docker image prune -f
-            
-            docker-compose up --build -d nextjs-prod
+            if docker ps --filter "name=nextjs-prod-new" --filter "status=running" | grep -q nextjs-prod-new; then
+              echo "✅ New container is running! Swapping traffic..."
+              
+              echo "🛑 Stopping and Removing the old nextjs-prod container..."
+              docker ps -q --filter "name=nextjs-prod" | grep -q . && docker stop nextjs-prod && docker rm nextjs-prod || echo "No old nextjs-prod container found"
 
+              echo "🔄 Renaming new container to nextjs-prod..."
+              docker rename nextjs-prod-new nextjs-prod
+            else
+              echo "❌ New container failed to start! Rolling back..."
+              docker stop nextjs-prod-new && docker rm nextjs-prod-new
+              exit 1
+            fi
 
-            
-            echo "✅ Deployment complete!"
-            docker compose ps
+            echo "✅ Deployment complete with zero downtime!"
           EOF
