@@ -21,10 +21,10 @@ FROM node:20-alpine
 WORKDIR /gibbs-react
 
 # Copy only the necessary files from the builder stage
-COPY --from=builder /gibbs-react/package.json /gibbs-react/package-lock.json ./
-COPY --from=builder /gibbs-react/.next ./.next
-COPY --from=builder /gibbs-react/public ./public
-COPY --from=builder /gibbs-react/node_modules ./node_modules
+COPY --from=builder /gibbs-react ./
+
+# Install only production dependencies
+RUN npm install
 
 # Expose the necessary port
 EXPOSE 4000
