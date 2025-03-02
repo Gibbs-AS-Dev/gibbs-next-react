@@ -35,7 +35,7 @@ jobs:
             git pull origin main || echo "⚠️ Git pull failed, skipping..."
             
             echo "🔄 Starting new container before stopping old one..."
-            docker compose up -d --build
+            docker-compose up nextjs-prod --build -d
             
             echo "🚀 Ensuring zero downtime..."
             OLD_CONTAINER=$(docker ps -q --filter "name=nextjs_app_old")
