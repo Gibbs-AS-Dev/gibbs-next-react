@@ -1,13 +1,28 @@
 version: "3.8"
 
 services:
-  nextjs-app:
-    build: .
+  nextjs-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     ports:
       - "4000:4000"
     env_file:
       - .env.local
     volumes:
       - .:/gibbs-react
-      - /gibbs-react/node_modules
+      - node_modules:/gibbs-react/node_modules
     command: ["npm", "run", "dev"]
+
+  nextjs-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    env_file:
+      - .env.local
+    command: ["npm", "run", "start"]
+
+volumes:
+  node_modules:
