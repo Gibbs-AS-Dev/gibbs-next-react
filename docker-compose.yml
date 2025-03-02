@@ -19,7 +19,7 @@ services:
     ports:
       - "4000:4000"
     env_file:
-      - .env.production
+      - .env.local
     volumes:
       - .:/gibbs-react
       - /gibbs-react/node_modules
