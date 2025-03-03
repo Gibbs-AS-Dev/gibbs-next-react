@@ -52,6 +52,7 @@ jobs:
               exit 1
             fi
 
+            
             # Stop and remove the old container
             OLD_CONTAINER_NAME=$(docker ps -a --filter "name=nextjsdevgibbsno-nextjs-prod" --format "{{.Names}}")
             if [ ! -z "$OLD_CONTAINER_NAME" ]; then
