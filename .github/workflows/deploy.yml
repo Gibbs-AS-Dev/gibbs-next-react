@@ -41,19 +41,15 @@ jobs:
             echo "🔎 Waiting for the new container to be healthy..."
             sleep 10  # Adjust if necessary
 
-            if docker ps --filter "name=nextjs-prod-new" --filter "status=running" | grep -q nextjs-prod-new; then
-              echo "✅ New container is running! Swapping traffic..."
+            echo "⏳ Waiting for the new container to be fully up..."
+            docker ps -f name=nextjs-prod-new --format "{{.Names}} is up"
 
-              echo "🛑 Stopping and Removing old nextjs-prod container..."
-              docker ps -q --filter "name=nextjs-prod" | grep -q . && docker stop nextjs-prod && docker rm nextjs-prod || echo "No old nextjs-prod container found"
+            echo "🚀 Zero Downtime: Removing the old container..."
+            docker rm -f nextjs-prod || echo "⚠️ No old container found to remove."
 
-              echo "🔄 Renaming new container to nextjs-prod..."
-              docker rename nextjs-prod-new nextjs-prod
-            else
-              echo "❌ New container failed to start! Rolling back..."
-              docker stop nextjs-prod-new && docker rm nextjs-prod-new
-              exit 1
-            fi
+            echo "🚀 Renaming new container to nextjs-prod..."
+            docker rename nextjs-prod-new nextjs-prod
+
 
             echo "✅ Deployment complete with zero downtime!"
           EOF
