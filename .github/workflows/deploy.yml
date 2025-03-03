@@ -54,7 +54,7 @@ jobs:
 
             
             # Stop and remove the old container
-            OLD_CONTAINER_NAME=$(docker ps -a --filter "name=nextjsdevgibbsno-nextjs-prod" --format "{{.Names}}")
+            OLD_CONTAINER_NAME=$(docker ps -a --filter "name=nextjsdevgibbsno-nextjs-prod-app" --format "{{.Names}}")
             if [ ! -z "$OLD_CONTAINER_NAME" ]; then
               echo "🚀 Stopping and removing old container: $OLD_CONTAINER_NAME"
               docker stop $OLD_CONTAINER_NAME
@@ -63,7 +63,7 @@ jobs:
 
             # Rename the new container to match the old container's name
             echo "🚀 Renaming the new container to nextjsdevgibbsno-nextjs-prod"
-            docker rename $NEW_CONTAINER_NAME nextjsdevgibbsno-nextjs-prod
+            docker rename $NEW_CONTAINER_NAME nextjsdevgibbsno-nextjs-prod-app
 
 
             echo "✅ Deployment complete with zero downtime!"
