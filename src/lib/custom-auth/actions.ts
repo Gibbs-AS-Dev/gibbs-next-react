@@ -2,15 +2,16 @@
 
 import { cookies } from "next/headers";
 import db from '@/lib/db'; // Assuming you have a MySQL setup here
-import bcrypt from 'bcryptjs'; // bcryptjs for password hashing
-import jwt from 'jsonwebtoken';  // For JWT token generation
+import jwt, { SignOptions } from 'jsonwebtoken';
 import PasswordHash from 'wordpress-password-js';
+
+import { User } from "@/lib/custom-auth/types";
 
 // Helper function to generate a JWT with user ID
 function generateToken(userId: number): string {
   const secretKey = process.env.JWT_SECRET_KEY || 'your-secret-key'; // Use environment variables for the secret key
   const payload = { userId };  // Including user ID in the token
-  const options = { expiresIn: '1h' }; // Token expiration time (1 hour)
+  const options: SignOptions = { expiresIn: '1h' as const };
 
   return jwt.sign(payload, secretKey, options);
 }
@@ -43,15 +44,15 @@ const user = {
   email: "john.doe@example.com",
 };
 
+
 // SignUp function to register new users
 export async function signUp(
   params: SignUpParams
 ): Promise<{ data?: { user: User }; error?: string }> {
-  const { firstName, lastName, email, password } = params;
-
+  
   try {
     // Simulate storing the user in the WordPress database
-    const hashedPassword = await bcrypt.hash(password, 10); // Hash the password before storing it
+    //const hashedPassword = await bcrypt.hash(password, 10); // Hash the password before storing it
 
     // Here you'd typically insert the user into the database.
     // Simulate database insertion
@@ -84,43 +85,46 @@ export async function signInWithPassword(
   const { email, password } = params;
 
   try {
-    // Query WordPress database for user by email
-    const [results] = await db.promise().query('SELECT * FROM wp_users WHERE user_email = ?', [email]);
+    // Check if the database is connected
+    const [rowsdata] = await db.promise().query("SELECT 1");
+    console.log("✅ Database Connection Test:", rowsdata);
 
-    if (results.length === 0) {
+    // Query WordPress database for user by email
+    const [results]: any = await db.promise().query(
+      "SELECT * FROM wp_users WHERE user_email = ?",
+      [email]
+    );
+
+    if (!results || results.length === 0) {
       return { error: "User Invalid!" };
     }
 
     const user = results[0];
 
-    // WordPress uses a salted MD5 hash or phpass for password hashing, so bcrypt won't work here.
-    // You must use WordPress password validation or API.
-    // For now, let's assume we're using bcrypt for comparison, which is incorrect for WordPress passwords
-    // Ideally, you should use WordPress's API or replicate WordPress password hash checking.
-    
-    const wordpressHasher = new PasswordHash()
+    // WordPress uses a special password hashing method.
+    const wordpressHasher = new PasswordHash();
 
-    // Simulate password checking with bcrypt (this won't work for WordPress directly)
-    const isPasswordValid = await wordpressHasher.check(password, user.user_pass);
+    // Ensure you're using the correct method: `CheckPassword`
+    const isPasswordValid = wordpressHasher.CheckPassword(password, user.user_pass);
 
     if (!isPasswordValid) {
       return { error: "Invalid credentials" };
     }
 
     // Generate JWT token with user ID
-    const token = generateToken(user.ID);
+    const token = generateToken(Number(user.ID));
 
     // Store the JWT in a cookie
     const cookieStore = await cookies();
     cookieStore.set("access_token", token, { httpOnly: true, maxAge: 3600 }); // 1-hour expiry
 
     return { data: { user } };
-
   } catch (err) {
-    console.error(err);
+    console.error("❌ Database Query Failed:", err);
     return { error: "Database query failed" };
   }
 }
+
 
 // Reset password functionality (currently not implemented)
 export async function resetPassword(

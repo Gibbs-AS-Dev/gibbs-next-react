@@ -1,7 +1,7 @@
 import type { User } from "./types";
 
 export const user = {
-	id: "USR-000",
+	id: 111,
 	avatar: "/assets/avatar.png",
 	firstName: "Sofia",
 	lastName: "Rivers",

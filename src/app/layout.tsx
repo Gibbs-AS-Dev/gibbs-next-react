@@ -1,6 +1,5 @@
 
 import * as React from "react";
-import { SessionProvider } from "next-auth/react";
 import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
 
 import "@/styles/global.css";

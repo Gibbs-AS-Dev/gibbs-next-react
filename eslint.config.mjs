@@ -24,18 +24,19 @@ export default [
 	js.configs.recommended,
 	...ts.configs.recommended,
 	{
-		rules: {
+		"rules": {
 			"@typescript-eslint/no-unused-vars": [
-				"error",
+				"warn",
 				{
-					ignoreRestSiblings: true,
-					argsIgnorePattern: "^_",
-					varsIgnorePattern: "^_",
-					caughtErrorsIgnorePattern: "^_",
-				},
+					"ignoreRestSiblings": true,
+					"argsIgnorePattern": "^_",
+					"varsIgnorePattern": "^_",
+					"caughtErrorsIgnorePattern": "^_"
+				}
 			],
-			"@typescript-eslint/no-empty-object-type": "off",
+	       "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
 		},
+	  
 	},
 	configPrettier,
 	pluginImport.flatConfigs.recommended,

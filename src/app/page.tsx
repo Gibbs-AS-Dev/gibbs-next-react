@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 import { paths } from "@/paths";
 
 export default function Page(): React.JSX.Element {
-  const { data: session, status } = useSession(); // Get session data and status
+  const { status } = useSession(); // Get session data and status
 
   useEffect(() => {
     // Wait until session status is determined
