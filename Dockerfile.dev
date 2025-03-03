@@ -1,15 +1,16 @@
 # Use Node.js for development
 FROM node:20-alpine
 
+# Set working directory inside the container
 WORKDIR /gibbs-react
 
 # Copy package.json and package-lock.json first
-COPY package.json package-lock.json ./
+COPY package.json /gibbs-react/package.json
 
-# Install dependencies
+# Install dependencies (including dev dependencies)
 RUN npm install
 
-# Copy the rest of the project
+# Copy the rest of the project files
 COPY . .
 
 # Expose the necessary port

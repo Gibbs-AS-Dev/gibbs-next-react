@@ -10,8 +10,8 @@ services:
     volumes:
       - .:/gibbs-react
       - node_modules:/gibbs-react/node_modules
+    working_dir: /gibbs-react 
     command: ["npm", "run", "dev"]
-
   nextjs-prod-new:
     build:
       context: .
