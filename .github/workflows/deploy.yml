@@ -41,14 +41,28 @@ jobs:
             echo "🔎 Waiting for the new container to be healthy..."
             sleep 10  # Adjust if necessary
 
+            # Wait for the new container to be fully up
             echo "⏳ Waiting for the new container to be fully up..."
-            docker ps -f name=nextjs-prod-new --format "{{.Names}} is up"
+            NEW_CONTAINER_NAME=$(docker ps --filter "name=nextjsdevgibbsno-nextjs-prod-new" --format "{{.Names}}")
+            echo "New container: $NEW_CONTAINER_NAME"
 
-            echo "🚀 Zero Downtime: Removing the old container..."
-            docker rm -f nextjs-prod || echo "⚠️ No old container found to remove."
+            # Ensure the new container is running
+            if [ -z "$NEW_CONTAINER_NAME" ]; then
+              echo "❌ New container failed to start!"
+              exit 1
+            fi
 
-            echo "🚀 Renaming new container to nextjs-prod..."
-            docker rename nextjs-prod-new nextjs-prod
+            # Stop and remove the old container
+            OLD_CONTAINER_NAME=$(docker ps -a --filter "name=nextjsdevgibbsno-nextjs-prod" --format "{{.Names}}")
+            if [ ! -z "$OLD_CONTAINER_NAME" ]; then
+              echo "🚀 Stopping and removing old container: $OLD_CONTAINER_NAME"
+              docker stop $OLD_CONTAINER_NAME
+              docker rm $OLD_CONTAINER_NAME
+            fi
+
+            # Rename the new container to match the old container's name
+            echo "🚀 Renaming the new container to nextjsdevgibbsno-nextjs-prod"
+            docker rename $NEW_CONTAINER_NAME nextjsdevgibbsno-nextjs-prod
 
 
             echo "✅ Deployment complete with zero downtime!"
