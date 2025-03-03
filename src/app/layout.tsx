@@ -1,5 +1,6 @@
+
 import * as React from "react";
-import type { Metadata, Viewport } from "next";
+import { SessionProvider } from "next-auth/react";
 import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
 
 import "@/styles/global.css";
@@ -15,22 +16,18 @@ import { SettingsButton } from "@/components/core/settings/settings-button";
 import { SettingsProvider } from "@/components/core/settings/settings-context";
 import { ThemeProvider } from "@/components/core/theme-provider";
 import { Toaster } from "@/components/core/toaster";
+import SessionProviderClientComponent from "./_session_provider";
 
-export const metadata = { title: appConfig.name } satisfies Metadata;
 
-export const viewport = {
-	width: "device-width",
-	initialScale: 1,
-	themeColor: appConfig.themeColor,
-} satisfies Viewport;
-
-const AuthProvider: React.FC<React.PropsWithChildren> = React.Fragment;
 
 interface LayoutProps {
-	children: React.ReactNode;
+  children: React.ReactNode;
+  pageProps: {
+    session?: any; // The session prop is passed here
+  };
 }
 
-export default async function Layout({ children }: LayoutProps): Promise<React.JSX.Element> {
+export default async function Layout({ children, pageProps }: LayoutProps): Promise<React.JSX.Element> {
 	const settings = await getPersistedSettings();
 	const direction = settings.direction ?? appConfig.direction;
 	const language = settings.language ?? appConfig.language;
@@ -39,25 +36,25 @@ export default async function Layout({ children }: LayoutProps): Promise<React.J
 		<html dir={direction} lang={language} suppressHydrationWarning>
 			<body>
 				<InitColorSchemeScript attribute="class" />
-				<AuthProvider>
 					<Analytics>
 						<LocalizationProvider>
 							<SettingsProvider settings={settings}>
 								<I18nProvider lng={language}>
 									<EmotionCacheProvider options={{ key: "mui" }}>
 										<Rtl direction={direction}>
-											<ThemeProvider>
-												{children}
-												<SettingsButton />
-												<Toaster position="bottom-right" />
-											</ThemeProvider>
+										    <SessionProviderClientComponent session={pageProps && pageProps.session || null}>
+												<ThemeProvider>
+													{children}
+													<SettingsButton />
+													<Toaster position="bottom-right" />
+												</ThemeProvider>
+											</SessionProviderClientComponent>
 										</Rtl>
 									</EmotionCacheProvider>
 								</I18nProvider>
 							</SettingsProvider>
 						</LocalizationProvider>
 					</Analytics>
-				</AuthProvider>
 			</body>
 		</html>
 	);
