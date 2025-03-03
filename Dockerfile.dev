@@ -5,7 +5,7 @@ FROM node:20-alpine
 WORKDIR /gibbs-react
 
 # Copy package.json and package-lock.json first
-COPY package.json /gibbs-react/package.json
+COPY package.json /package.json
 
 # Install dependencies (including dev dependencies)
 RUN npm install

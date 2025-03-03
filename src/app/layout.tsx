@@ -16,7 +16,7 @@ import { SettingsButton } from "@/components/core/settings/settings-button";
 import { SettingsProvider } from "@/components/core/settings/settings-context";
 import { ThemeProvider } from "@/components/core/theme-provider";
 import { Toaster } from "@/components/core/toaster";
-import SessionProviderClientComponent from "./_session_provider";
+import SessionProviderClientComponent from "./_session-provider";
 
 
 
