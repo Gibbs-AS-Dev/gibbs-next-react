@@ -35,7 +35,7 @@ jobs:
             git pull origin main || echo "⚠️ Git pull failed, skipping..."
 
             echo "🚀 Starting new nextjs-prod container..."
-            docker compose up --build -d nextjs-dev
+            docker compose up --build -d nextjs-prod-new
 
 
             echo "🔎 Waiting for the new container to be healthy..."
