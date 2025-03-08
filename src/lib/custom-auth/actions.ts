@@ -100,12 +100,14 @@ export async function signInWithPassword(
     }
 
     const user = results[0];
+    console.log(user)
 
     // WordPress uses a special password hashing method.
     const wordpressHasher = new PasswordHash();
+    console.log("Methods available in wordpressHasher:", Object.getOwnPropertyNames(Object.getPrototypeOf(wordpressHasher)));
 
     // Ensure you're using the correct method: `CheckPassword`
-    const isPasswordValid = wordpressHasher.CheckPassword(password, user.user_pass);
+    const isPasswordValid = wordpressHasher.check(password, user.user_pass);
 
     if (!isPasswordValid) {
       return { error: "Invalid credentials" };
