@@ -1,7 +1,6 @@
 "use client";
 
 import type * as React from "react";
-
 import { dashboardConfig } from "@/config/dashboard";
 import { useSettings } from "@/components/core/settings/settings-context";
 import { HorizontalLayout } from "@/components/dashboard/layout/horizontal/horizontal-layout";
