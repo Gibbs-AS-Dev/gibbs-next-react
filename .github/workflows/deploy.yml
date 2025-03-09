@@ -65,6 +65,5 @@ jobs:
             echo "🚀 Renaming the new container to nextjsdevgibbsno-nextjs-prod"
             docker rename $NEW_CONTAINER_NAME nextjsdevgibbsno-nextjs-prod-app
 
-
             echo "✅ Deployment complete with zero downtime!"
           EOF
