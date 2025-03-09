@@ -104,7 +104,7 @@ export function SignInForm(): React.JSX.Element {
 				</Box>
 			</div>
 			<Stack spacing={1}>
-				<Typography variant="h5">Sign in</Typography>
+				<Typography variant="h5">Sign in Gibbs</Typography>
 				<Typography color="text.secondary" variant="body2">
 					Don&apos;t have an account?{" "}
 					<Link component={RouterLink} href={paths.auth.custom.signUp} variant="subtitle2">
