@@ -19,7 +19,7 @@ services:
     ports:
       - "4000:4000"
     env_file:
-      - .env.local
+      - .env
     restart: always
     command: ["npm", "run", "start"]
 

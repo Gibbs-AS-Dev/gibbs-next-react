@@ -10,5 +10,5 @@ const connection = mysql.createPool({
   queueLimit: 0,
 });
 
-
+console.log(process)
 export default connection;
