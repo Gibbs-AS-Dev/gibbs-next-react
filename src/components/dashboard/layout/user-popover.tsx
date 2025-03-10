@@ -26,6 +26,7 @@ const user = {
 
 function SignOutButton(): React.JSX.Element {
 	let signOutUrl: string = paths.home;
+	
 
 	if (appConfig.authStrategy === AuthStrategy.AUTH0) {
 		signOutUrl = paths.auth.auth0.signOut;
@@ -46,7 +47,6 @@ function SignOutButton(): React.JSX.Element {
 	if (appConfig.authStrategy === AuthStrategy.SUPABASE) {
 		signOutUrl = paths.auth.supabase.signOut;
 	}
-
 	return (
 		<MenuItem component="a" href={signOutUrl} sx={{ justifyContent: "center" }}>
 			Sign out

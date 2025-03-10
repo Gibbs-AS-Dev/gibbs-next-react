@@ -91,7 +91,7 @@ export async function signInWithPassword(
 
     // Query WordPress database for user by email
     const [results]: any = await db.promise().query(
-      "SELECT * FROM ptn_users WHERE user_email = ?",
+      "SELECT * FROM "+process.env.NEXT_DBPREFIX+"users WHERE user_email = ?",
       [email]
     );
 
